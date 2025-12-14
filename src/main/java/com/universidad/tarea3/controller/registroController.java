@@ -3,6 +3,7 @@ package com.universidad.tarea3.controller;
 
 import com.universidad.tarea3.Application;
 import com.universidad.tarea3.modulos.Conexion;
+import com.universidad.tarea3.seguridad.InputValidator;
 import com.universidad.tarea3.seguridad.PasswordUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +40,12 @@ public class registroController {
         //verificamos que no esten vacios los campos
         if (username.isEmpty() || password.isEmpty()) {
             System.out.println("Campos vacíos");
+            return;
+        }
+
+        //verificamos que el nombre de usuario sea valido segun nuestro whiltelist
+        if(!InputValidator.usernameValido(username)){
+            System.out.println("Username invalido");
             return;
         }
 
