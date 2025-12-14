@@ -3,6 +3,7 @@ package com.universidad.tarea3;
 import com.universidad.tarea3.controller.asistenciaController;
 import com.universidad.tarea3.controller.detalleController;
 import com.universidad.tarea3.controller.inicioSesionController;
+import com.universidad.tarea3.controller.registroController;
 import com.universidad.tarea3.modulos.Administrador;
 import com.universidad.tarea3.modulos.Estudiante;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +35,25 @@ public class Application extends javafx.application.Application {
         inicioSesionController sesionController = fxmlLoader.getController();
         sesionController.setAplication(this);
         stage.show();
+    }
+
+    //segunda ventana de registro
+    public void abrirRegistroVentana(){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("registroAdmin.fxml"));
+            Parent root = loader.load();
+
+            //controlador
+            registroController registroController = loader.getController();
+            registroController.setAplication(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Registro usuarios");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //abrir una vez sea exitoso otra ventana
