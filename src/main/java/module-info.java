@@ -8,4 +8,6 @@ module com.universidad.tarea3 {
     exports com.universidad.tarea3;
     exports com.universidad.tarea3.controller;
     opens com.universidad.tarea3.controller to javafx.fxml;
+    exports com.universidad.tarea3.seguridad;
+    opens com.universidad.tarea3.seguridad to javafx.fxml;
 }

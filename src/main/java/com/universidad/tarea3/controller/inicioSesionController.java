@@ -1,6 +1,8 @@
 package com.universidad.tarea3.controller;
 
 import com.universidad.tarea3.Application;
+import com.universidad.tarea3.modulos.Conexion;
+import com.universidad.tarea3.seguridad.PasswordUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class inicioSesionController {
 
@@ -57,14 +62,35 @@ public class inicioSesionController {
             return;
         }
 
-        if(usuario.equals(aplicacion.admin.getNombre()) && password.equals(aplicacion.admin.getPassword())){
-            System.out.println("Acceso confirmado");
+        //pasamos el password otra vez en nuestro utils
+        String passwordHash = PasswordUtils.hashPassword(password);
 
-            //si funciona, entonces abrimos la ventana de Asistencia
-            aplicacion.abrirVentanaAsistencia();
-        }else{
-            System.out.println("Acceso denegado");
-            mostrarError("Datos no validos");
+        //verficamos aqui ahora la base de datos
+        String sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
+
+        try{
+            Conexion conexion = new Conexion();
+            PreparedStatement ps = conexion.getConexion().prepareStatement(sql);
+
+            ps.setString(1, usuario);
+            ps.setString(2, passwordHash);
+
+            //guardamos el resultado en una variable
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                System.out.println("Acceso confirmado");
+                aplicacion.abrirVentanaAsistencia();
+            }else {
+                mostrarError("Credenciales Invalidas");
+            }
+
+            rs.close();
+            ps.close();
+            conexion.close();
+
+        } catch (SQLException e) {
+            mostrarError("Error de conexion");
+            throw new RuntimeException(e);
         }
 
     }
